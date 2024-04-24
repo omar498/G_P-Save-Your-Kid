@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supervisors', function (Blueprint $table) {
-            $table->id('ID');
+        Schema::create('supervisor', function (Blueprint $table) {
+            $table->integer('ID', false)->unique('id');
             $table->string('Full_Name');
             $table->string('Password');
-            $table->binary('Image');
-            $table->string('Email');
-            $table->unsignedBigInteger('Phone');
-            $table->string('Address')->nullable();
+            $table->binary('Image')->default('NULL');
+            $table->string('Email')->unique('email');
+            $table->integer('Phone');
+            $table->string('Address');
             $table->string('location');
-            $table->timestamps();
+
+            /* $table->primary(['ID']); */
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bus_info');
+        Schema::dropIfExists('supervisor');
     }
 };

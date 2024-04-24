@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parents', function (Blueprint $table) {
-            $table->id('ID');
+        Schema::create('parent', function (Blueprint $table) {
+            $table->integer('ID', false)->unique('id');
             $table->string('Full_Name');
             $table->string('Password');
-            $table->string('Child_Name');
-            $table->string('Email')->unique();
-            $table->unsignedBigInteger('Phone');
+            $table->string('Child_Name')->index('child_name');
+            $table->string('Email')->unique('email');
+            $table->integer('Phone')->unique('phone');
             $table->string('address');
-            $table->unsignedBigInteger('Supervisor_ID');
-
-            $table->foreign('Supervisor_ID')->references('ID')->on('supervisors');
-
-            $table->timestamps();
+            $table->integer('Supervisor_ID');
         });
     }
 
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parents');
+        Schema::dropIfExists('parent');
     }
 };

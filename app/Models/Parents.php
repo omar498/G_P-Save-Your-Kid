@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Parents extends Model
 {
     use HasFactory;
-    protected $table = 'parents';
-
-    /* protected $primaryKey = 'ID';
-
-    public $timestamps = false; */
+    protected $table = 'parent';
+    protected $primaryKey = 'ID';
+    public $timestamps = false;
 
     protected $fillable = [
         'ID',
@@ -22,6 +20,16 @@ class Parents extends Model
         'Email',
         'Phone',
         'address',
-        'Supervisor_ID',
+        'Supervisor_ID'
     ];
+
+    public function children()
+    {
+        return $this->hasMany(Student::class, 'Parent_ID', 'ID');
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Supervisor::class, 'Supervisor_ID', 'ID');
+    }
 }

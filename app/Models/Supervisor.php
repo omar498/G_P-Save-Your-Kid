@@ -7,23 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supervisor extends Model
 {
-    /* use HasFactory;
-    protected $table = 'supervisors';
-
-    protected $primaryKey = 'ID';
-
-    public $timestamps = false;
-
-    protected $fillable = [
-        'Full_Name',
-        'Password',
-        'Image',
-        'Email',
-        'Phone',
-        'Address',
-        'location',
-    ]; */
     use HasFactory;
+
+    protected $table = 'supervisor';
+    protected $primaryKey = 'ID';
+    public $timestamps = false;
 
     protected $fillable = [
         'ID',
@@ -35,17 +23,19 @@ class Supervisor extends Model
         'Address',
         'location'
     ];
-    /* public static function updateSupervisor($id, $data)
+
+    public function buses()
     {
-        $supervisor = self::find($id);
+        return $this->hasMany(BusInfo::class, 'Bus_Supervisor_ID', 'ID');
+    }
 
-        if (!$supervisor) {
-            return response()->json(['message' => 'Supervisor not found'], 404);
-        }
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'Supervisor_ID', 'ID');
+    }
 
-        $supervisor->fill($data->toArray());
-        $supervisor->save();
-
-        return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 200);
-    } */
+    public function parents()
+    {
+        return $this->hasManyThrough(Parents::class, Student::class, 'Supervisor_ID', 'Supervisor_ID', 'ID', 'ID');
+    }
 }

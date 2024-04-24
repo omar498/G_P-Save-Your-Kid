@@ -26,11 +26,6 @@ class SupervisorController extends Controller
             ]
         );
 
-        // Create Supervisor
-        /* $supervisor = Supervisor::create($request->all());
-
-        return response()->json(['message' => 'Supervisor created successfully', 'supervisor' => $supervisor], 201);
-     */
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
@@ -39,7 +34,7 @@ class SupervisorController extends Controller
             ['Password' => bcrypt($request->Password)]
         ));
         return response()->json([
-            'message' => 'User successfully Stored',
+            'message' => 'SuperVisor successfully Stored',
         ], 201);
     }
 
@@ -62,41 +57,8 @@ class SupervisorController extends Controller
     }
 
 
-    /*    public function update(Request $request, $id)
-    {
-        // Validate request data
-        $supervisor = Validator::make(
-            $request->all(),
-            [
-                'ID' => 'required',
-                'Full_Name' => 'required',
-                'Email' => 'required|email',
-                'Phone' => 'numeric',
-                'Password' => 'required ',
-                'Address' => 'string',
-                'location' => 'string'
-            ]
-        );
-
-        $supervisor = Supervisor::find($id);
-
-        if (!$supervisor) {
-            return response()->json(['message' => 'Supervisor not found'], 404);
-        }
-
-
-        $supervisor->update([
-            'ID' => $request->ID ?? $request->ID,
-            'Full_Name' => $request->Full_Name ?? $request->Full_Name,
-            'Email' => $request->Email ?? $request->Email,
-        ]);
-
-        return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 200);
-    }
- */
-    /////////////////////////////////////////////////////////////////////
-
-    public function update(Request $request, $id)
+    //Update Function
+    public function  update(Request $request, $id)
     {
         // Find the supervisor
         $supervisor = Supervisor::find($id);
@@ -107,11 +69,13 @@ class SupervisorController extends Controller
 
         // Validate request data
         $validator = Validator::make(
-            $request->only(['ID', 'Full_Name', 'Email',]),
+            $request->only(['Full_Name', 'Email', 'Phone', 'Address',]),
             [
-                'ID' => 'required',
                 'Full_Name' => 'required',
                 'Email' => 'required|email',
+                'Phone' => 'numeric',
+                'Address' => 'string',
+
             ]
         );
 
@@ -119,22 +83,17 @@ class SupervisorController extends Controller
             return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 400);
         }
 
-        // Update only the attributes provided in the request
-        $attributes = $request->only(['ID', 'Full_Name', 'Email',]);
-
-        // Filter out null values
-        $attributes = array_filter($attributes, function ($value) {
-            return $value !== null;
-        });
-
-        // Update the supervisor with the filtered attributes
-        $supervisor->update($attributes);
-
-        return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 200);
+        $supervisor->update([
+            'Full_Name' => $request->Full_Name,
+            'Email' => $request->Email,
+            'Phone' => $request->Phone,
+            'Address' => $request->Address,
+        ]);
+        $supervisor->save();
+        return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 201);
     }
 
-
-    /////////////////////////////////////////////////////////////////////
+    //Delete Function 
     public function destroy($id)
     {
         $supervisor = Supervisor::find($id);
@@ -143,7 +102,7 @@ class SupervisorController extends Controller
             return response()->json(['message' => 'Supervisor not found'], 404);
         }
 
-        $supervisor->delete();
+        $supervisor->destroy($id);
         return response()->json(['message' => 'Supervisor deleted successfully'], 200);
     }
 }

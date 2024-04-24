@@ -26,7 +26,7 @@ class ParentController extends Controller
         if ($parent) {
             return response()->json([
                 'success' => true,
-                'parent  parent' => $parent,
+                'parent' => $parent,
             ]);
         } {
             return $this->apiresponse(null, 'Parent Table Not Found', 404);
@@ -41,11 +41,11 @@ class ParentController extends Controller
             [
                 'ID' => 'required',
                 'Full_Name' => 'required',
-                'Password' => 'required',
+                'Password' => 'required ',
                 'Child_Name' => 'required',
                 'Email' => 'required',
-                'address' => 'required',
                 'Phone' => 'required',
+                'address' => 'required',
                 'Supervisor_ID' => 'required',
             ]
         );
@@ -58,69 +58,47 @@ class ParentController extends Controller
             ['Password' => bcrypt($request->Password)]
         ));
         return response()->json([
-            'message' => 'User successfully Stored',
+            'message' => 'Parent successfully Stored',
         ], 201);
     }
-
-    /* public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'ID' => 'required |unique',
-            'Full_Name' => 'required',
-            'Password' => 'required',
-            'Child_Name' => 'required',
-            'Email' => 'required |unique:parent|',
-            'address' => 'required',
-            'Phone' => 'required',
-            'Supervisor_ID' => 'required |unique:parent|',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        Parents::create(array_merge(
-            $validator->validated(),
-            ['Password' => bcrypt($request->Password)]
-        ));
-        return response()->json([
-            'message' => 'User successfully Stored',
-        ], 201);
-    }
- */
-    public function update(Request $request, $id) //have route//Did't work because restricted taples in DB
+    //Update Function
+    public function update(Request $request, $id)
 
     {
-        $validator = Validator::make($request->all(), [
-            'ID' => 'required',
+        $validator = Validator::make($request->only(['Full_Name', 'Email', 'address', 'Phone',]), [
             'Full_Name' => 'required',
-            'Password' => 'required',
-            'Child_Name' => 'required',
             'Email' => 'required',
             'address' => 'required',
             'Phone' => 'required',
-            'Supervisor_ID' => 'required',
+
         ]);
 
-        $supervisor = Parents::find($id);
+        $Parent = Parents::find($id);
 
-        if (!$supervisor) {
-            return response()->json(['message' => 'Supervisor not found'], 404);
+        if (!$Parent) {
+            return response()->json(['message' => 'Parent not found'], 404);
         }
 
-        $supervisor->update($request->all());
+        $Parent->update([
+            'Full_Name' => $request->Full_Name,
+            'Email' => $request->Email,
+            'Phone' => $request->Phone,
+            'Address' => $request->address,
+        ]);
 
-        return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 200);
+
+        return response()->json(['message' => 'Parent updated successfully', 'Parent' => $Parent], 200);
     }
 
     public function destroy($id)
     {
-        $parent = Parents::find($id);
+        $Parent = Parents::find($id);
 
-        if (!$parent) {
-            return response()->json(['message' => 'parent not found'], 404);
+        if (!$Parent) {
+            return response()->json(['message' => 'Parent not found'], 404);
         }
 
-        Parents::destroy($parent);
-
-        return response()->json(['message' => 'parent deleted successfully'], 200);
+        $Parent->destroy($id);
+        return response()->json(['message' => 'Parent deleted successfully'], 200);
     }
 }

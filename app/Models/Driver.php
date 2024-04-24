@@ -9,15 +9,18 @@ class Driver extends Model
 {
     use HasFactory;
     protected $table = 'driver';
-
     protected $primaryKey = 'ID';
-
     public $timestamps = false;
 
     protected $fillable = [
         'Full_Name',
         'Image',
         'Phone',
-        'Email',
+        'Email'
     ];
+
+    public function bus()
+    {
+        return $this->hasOne(BusInfo::class, 'Bus_Driver_ID', 'ID');
+    }
 }
