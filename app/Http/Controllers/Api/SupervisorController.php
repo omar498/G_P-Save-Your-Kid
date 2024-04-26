@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Supervisor;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use function Laravel\Prompts\password;
+
 
 class SupervisorController extends Controller
 {
+
     public function store(Request $request)
     {
         // Validate request data
@@ -93,7 +95,7 @@ class SupervisorController extends Controller
         return response()->json(['message' => 'Supervisor updated successfully', 'supervisor' => $supervisor], 201);
     }
 
-    //Delete Function 
+    //Delete Function
     public function destroy($id)
     {
         $supervisor = Supervisor::find($id);
@@ -105,4 +107,5 @@ class SupervisorController extends Controller
         $supervisor->destroy($id);
         return response()->json(['message' => 'Supervisor deleted successfully'], 200);
     }
+   
 }
